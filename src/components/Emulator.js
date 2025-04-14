@@ -1,6 +1,7 @@
 let cashinHandler;
 let vendCallback = null;
-let vendListenerAdded = false;
+let cardKeyHandler = null;
+let cardTriggered = false;
 
 export const emulator = {
   StartCashin(cb) {
@@ -19,35 +20,72 @@ export const emulator = {
     }
   },
 
-  BankCardPurchase(amount, cb, display_cb, isSuccess) {
-    display_cb("Обработка карты");
-    setTimeout(() => display_cb("Связь с банком"), 2000);
-    setTimeout(() => {
-      display_cb(isSuccess ? "Оплата успешна" : "Ошибка оплаты");
-      cb(isSuccess);
-    }, 3000);
+  BankCardPurchase(amount, cb, display_cb) {
+    if (cardKeyHandler) return; // уже активен
+    cardTriggered = false;
+
+    display_cb("Приложите карту");
+    this._cardCallback = cb;
+    this._cardDisplayCb = display_cb;
+
+    cardKeyHandler = function (e) {
+      const key = e.key.toLowerCase();
+      if (cardTriggered) return;
+
+      if (key === "a") {
+        cardTriggered = true;
+        emulator.__triggerCardRead(true);
+      }
+      if (key === "d") {
+        cardTriggered = true;
+        emulator.__triggerCardRead(false);
+      }
+    };
+
+    window.addEventListener("keydown", cardKeyHandler);
   },
 
   BankCardCancel() {
-    console.log("Операция по карте отменена");
+    if (cardKeyHandler && !cardTriggered) {
+      window.removeEventListener("keydown", cardKeyHandler);
+      cardKeyHandler = null;
+      this._cardCallback = null;
+      this._cardDisplayCb = null;
+      cardTriggered = false;
+    }
+  },
+
+  __triggerCardRead(success) {
+    if (!this._cardCallback || !this._cardDisplayCb) return;
+
+    window.removeEventListener("keydown", cardKeyHandler);
+    cardKeyHandler = null;
+
+    this._cardDisplayCb("Связь с банком");
+    setTimeout(() => {
+      this._cardDisplayCb("Получение результата");
+      setTimeout(() => {
+        this._cardCallback(success);
+        this._cardCallback = null;
+        this._cardDisplayCb = null;
+        cardTriggered = false;
+      }, 1000);
+    }, 1000);
   },
 
   Vend(product_idx, cb) {
     vendCallback = cb;
-
-    if (!vendListenerAdded) {
-      window.addEventListener("keydown", handleVendKeys);
-      vendListenerAdded = true;
-    }
+    window.addEventListener("keydown", handleVendKeys);
   },
 };
 
 function handleVendKeys(e) {
-  if (e.key === "x" || e.key === "ч") {
+  const key = e.key.toLowerCase();
+  if (key === "y" || key === "н") {
     vendCallback?.(true);
     cleanupVend();
   }
-  if (e.key === "y" || e.key === "н") {
+  if (key === "x" || key === "ч") {
     vendCallback?.(false);
     cleanupVend();
   }
@@ -56,5 +94,4 @@ function handleVendKeys(e) {
 function cleanupVend() {
   vendCallback = null;
   window.removeEventListener("keydown", handleVendKeys);
-  vendListenerAdded = false;
 }

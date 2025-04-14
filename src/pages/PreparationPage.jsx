@@ -93,7 +93,7 @@ export default function PreparationPage() {
         </div>
       )}
       <p className="key-instruction">
-        Нажмите <kbd>X</kbd> для успешной выдачи или <kbd>Y</kbd> для ошибки
+        Нажмите <kbd>Y</kbd> для успешной выдачи или <kbd>X</kbd> для ошибки
       </p>
     </div>
   );

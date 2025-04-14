@@ -17,55 +17,61 @@ export default function CardPaymentPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentResult, setPaymentResult] = useState(null);
   const [statusMessages, setStatusMessages] = useState([]);
+  const [waitingForCard, setWaitingForCard] = useState(true);
 
   useEffect(() => {
-    const handleKey = (e) => {
-      if (isProcessing || paymentResult !== null) return;
-
-      const key = e.key.toLowerCase();
-      if (key === "x" || key === "ч") {
-        startEmulatorPayment(true);
-      }
-      if (key === "y" || key === "н") {
-        startEmulatorPayment(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [isProcessing, paymentResult]);
-
-  const startEmulatorPayment = (isSuccess) => {
-    setIsProcessing(true);
-    setStatusMessages([]);
-    setPaymentResult(null);
-
     emulator.BankCardPurchase(
       price,
       (result) => {
         setPaymentResult(result);
         setIsProcessing(false);
+        setWaitingForCard(false);
         if (result) {
           setTimeout(() => navigate(`/prepare/${product.id}`), 2000);
         }
       },
-      (message) => {
-        setStatusMessages((prev) => [...prev, message]);
-      },
-      isSuccess // ← передаём флаг результата
+      (msg) => {
+        setStatusMessages(prev => {
+          if (prev.at(-1) !== msg) {
+            return [...prev, msg];
+          }
+          return prev;
+        });
+      }
     );
-  };
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (!waitingForCard || isProcessing) return;
+
+      const key = e.key.toLowerCase();
+      if (key === "a") {
+        setIsProcessing(true);
+        setWaitingForCard(false);
+        emulator.__triggerCardRead(true);
+      }
+      if (key === "d") {
+        setIsProcessing(true);
+        setWaitingForCard(false);
+        emulator.__triggerCardRead(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [waitingForCard, isProcessing]);
 
   const handleCancel = () => {
-    emulator.BankCardCancel();
-    setStatusMessages((prev) => [...prev, "Операция отменена"]);
-    setTimeout(() => navigate(-1), 2000);
+    if (waitingForCard) {
+      emulator.BankCardCancel();
+      setStatusMessages(prev => [...prev, "Операция отменена"]);
+      setTimeout(() => navigate(-1), 1500);
+    }
   };
 
   const handleRetry = () => {
-    setStatusMessages([]);
-    setPaymentResult(null);
-    setIsProcessing(false);
+    window.location.reload();
   };
 
   if (!product || !price) return <p>Напиток не найден</p>;
@@ -88,31 +94,28 @@ export default function CardPaymentPage() {
             ? "Оплата прошла успешно!"
             : "Приложите карту к терминалу"}
         </p>
-  
-        <div className="card-status">
-          {isError ? (
-            <p className="text-white">Ошибка оплаты</p>
-          ) : isSuccess ? null : (
-            statusMessages.map((msg, i) => (
+
+        {!isError && !isSuccess && (
+          <div className="card-status">
+            {statusMessages.map((msg, i) => (
               <p key={i}>{msg}</p>
-            ))
-          )}
-        </div>
-  
-        {/* Показываем инструкцию только до результата */}
+            ))}
+          </div>
+        )}
+
         {!isSuccess && !isError && (
           <p className="key-instruction">
-            Нажмите <kbd>X</kbd> для успешной оплаты или <kbd>Y</kbd> для ошибки
+            Нажмите <kbd>A</kbd> для успешной оплаты или <kbd>D</kbd> для ошибки
           </p>
         )}
-  
+
         {isError && (
           <button className="retry-button" onClick={handleRetry}>
             Попробовать ещё раз
           </button>
         )}
       </div>
-  
+
       {!isSuccess && (
         <button
           className={`cancel-button ${isError ? "cancel-transparent text-white" : ""}`}
@@ -122,5 +125,5 @@ export default function CardPaymentPage() {
         </button>
       )}
     </div>
-  );  
+  );
 }
