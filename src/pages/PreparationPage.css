@@ -1,0 +1,112 @@
+.prep-container {
+    background: #fff;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .circle-timer {
+    position: relative;
+    width: 420px;
+    height: 420px;
+  }
+  
+  .progress-ring {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  
+  .spinner-group {
+    animation: spin 3s linear infinite;
+    transform-origin: 210px 210px;
+  }
+  
+  .ring-progress {
+    fill: none;
+    stroke: #f8cb2e;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 314 942;
+  }
+  
+  .ring-dot {
+    fill: #f8cb2e;
+  }
+  
+  @keyframes spin {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .time-text {
+    position: absolute;
+    top: 130px;
+    width: 100%;
+    text-align: center;
+    font-size: 80px;
+    font-weight: 500;
+    color: #000;
+  }
+  
+  .label-text {
+    position: absolute;
+    top: 230px;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    color: #888;
+  }
+  
+  .prep-done {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+  }
+  
+  .done-bg {
+    background: #f8cb2e;
+  }
+  
+  .warning-bg {
+    background: #ff9800;
+  }
+  .done-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .drink-image {
+    width: 160px;
+    height: auto;
+    margin-bottom: 30px;
+  }
+  
+  .prep-done-text {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #000;
+    text-align: center;
+  }
+  
+  .prep-subtext {
+    font-size: 18px;
+    color: #000;
+    text-align: center;
+  }
+
+  .key-instruction {
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+    width: 100%;
+    font-size: 16px;
+    color: #555;
+  }

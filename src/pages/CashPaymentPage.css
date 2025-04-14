@@ -1,0 +1,106 @@
+.cash-page {
+    background: #f8cb2e;
+    height: 100%;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+  }
+  
+  .cash-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .cash-title {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 40px;
+    color: #000;
+  }
+  
+  .cash-options {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .cash-option {
+    background: #fff;
+    color: #000;
+    padding: 30px 20px;
+    border-radius: 12px;
+    font-size: 24px;
+    font-weight: 700;
+    min-width: 100px;
+    text-align: center;
+  }
+  
+  .cash-info {
+    font-size: 18px;
+    color: #000;
+    margin: 6px 0;
+  }
+  
+  .cancel-button {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 18px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 93%;
+  }
+  
+  
+  .success-bg {
+    background: #4caf50;
+  }
+  
+  .text-white {
+    color: #fff;
+  }
+  
+  .card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .card-img {
+    width: 200px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .card-instruction {
+    font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 30px;
+  }
+
+  .cash-center-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .cash-icon {
+    width: 100px;
+    height: auto;
+    margin-bottom: 20px;
+  }
