@@ -4,7 +4,7 @@
 
 ## Демо
 
-[Открыть онлайн](https://your-deploy-link.vercel.app)
+[Открыть онлайн](https://coffee-kiosk-gamma.vercel.app/)
 
 ## Описание
 
@@ -25,7 +25,7 @@
 ## Установка и запуск
 
 ```bash
-git clone https://github.com/yourusername/coffee-kiosk.git
+git clone https://github.com/DenisStobert/coffee-kiosk.git
 cd coffee-kiosk
 npm install
 npm run dev # или npm start
